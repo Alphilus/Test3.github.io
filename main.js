@@ -1,29 +1,41 @@
-const quizes = [
-    {
-        id: 1,
-        question: "1 + 1 = ?",
-        answers: [1, 2, 3, 4],
-    },
-    {
-        id: 2,
-        question: "2 + 2 = ?",
-        answers: [2, 3, 4, 5],
-    },
-    {
-        id: 3,
-        question: "3 + 3 = ?",
-        answers: [3, 4, 5, 6],
-    },
-];
-const btn = document.getElementById('btn');
-const quizItems = document.querySelectorAll('.quiz-item');
+const posts = document.getElementById('posts');
+const albums = document.getElementById('albums');
+const photos = document.getElementById('photos');
+const titlesList = document.getElementById('titlesList');
 
-btn.addEventListener('click', function() {
-    quizItems.forEach((quizItem, index) => {
-        const answers = quizItem.querySelectorAll('.quiz-answer-item input');
+fetchData("https://jsonplaceholder.typicode.com/posts");
 
-        const randomAnswerIndex = Math.floor(Math.random() * answers.length);
+function fetchData(url){
+    fetch(url)
+        .then(response => response.json())
+        .then(title => {
+            titlesList.innerHTML = "";
+            title.forEach(list => {
+                const li = document.createElement("li");
+                li.textContent = list.title || list.name;
+                titlesList.appendChild(li);
+            });
+        })
+        .catch(error => console.log(error));
+}
 
-        answers[randomAnswerIndex].checked = true;
-    });
+posts.addEventListener("click", function() {
+    posts.classList.add("active");
+    albums.classList.remove("active");
+    photos.classList.remove("active");
+    fetchData("https://jsonplaceholder.typicode.com/posts");
+});
+
+albums.addEventListener("click", function() {
+    posts.classList.remove("active");
+    albums.classList.add("active");
+    photos.classList.remove("active");
+    fetchData("https://jsonplaceholder.typicode.com/albums");
+});
+
+photos.addEventListener("click", function() {
+    posts.classList.remove("active");
+    albums.classList.remove("active");
+    photos.classList.add("active");
+    fetchData("https://jsonplaceholder.typicode.com/photos");
 });
